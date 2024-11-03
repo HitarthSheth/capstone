@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Annotorious Component</title>
+  <link rel="stylesheet" href="https://unpkg.com/@annotorious/react/annotorious-react.css">
+  <script type="module">
+    import { Annotorious, ImageAnnotator } from "https://unpkg.com/@annotorious/react";
+
+    // Function to initialize Annotorious with a new image URL
+    function initializeAnnotorious(imageUrl) {
+      const root = document.getElementById("annotorious-root");
+      root.innerHTML = '';  // Clear existing content
+      
+      const annotatorContainer = document.createElement("div");
+      annotatorContainer.innerHTML = `
+        <Annotorious>
+          <ImageAnnotator>
+            <img src="${imageUrl}" alt="Annotatable Image" />
+          </ImageAnnotator>
+        </Annotorious>
+      `;
+      
+      root.appendChild(annotatorContainer);
+    }
+
+    // Listen for messages from Wix to update the image URL
+    window.addEventListener("message", (event) => {
+      const { data } = event;
+      if (data && data.type === "SET_IMAGE") {
+        initializeAnnotorious(data.url);
+      }
+    });
+  </script>
+</head>
+<body>
+  <div id="annotorious-root"></div>
+</body>
+</html>
